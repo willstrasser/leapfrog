@@ -4,16 +4,30 @@ import Head from '../components/head';
 import Nav from '../components/nav';
 
 const Home = () => {
+  const [stops, setStops] = useState(null);
   const [test, setTest] = useState(null);
+
+  useEffect(() => {
+    async function getStops() {
+      const res = await fetch('/api/stops');
+      const resp = await res.json();
+      setStops(resp);
+    }
+    getStops();
+  }, []);
 
   useEffect(() => {
     async function getTest() {
       const res = await fetch('/api/testing');
-      const test = await res.json();
-      setTest(test);
+      const resp = await res.json();
+      setTest(resp);
+      console.log(resp);
     }
     getTest();
   }, []);
+
+  const routeIds = test ? Array.from(new Set(test.map((train) => train.routeId))) : [];
+  console.log(routeIds);
 
   return (
     <div>
@@ -22,11 +36,26 @@ const Home = () => {
 
       <div className="hero">
         <p className="row date">
-          The number of stops is:&nbsp;{' '}
+          Incoming :{' '}
           {test ? (
-            <span>
-              <b>{Object.keys(test).length}</b>
-            </span>
+            <React.Fragment>
+              <span>
+                {routeIds &&
+                  routeIds.map((id) => {
+                    const routes = test.filter((route) => route.routeId === id);
+                    return (
+                      <>
+                        <div>{id}</div>
+                        <div>
+                          {routes.map((route) => (
+                            <div>{route.arrivalTime}</div>
+                          ))}
+                        </div>
+                      </>
+                    );
+                  })}
+              </span>
+            </React.Fragment>
           ) : (
             <span className="loading"></span>
           )}

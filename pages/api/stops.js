@@ -2,9 +2,9 @@ import {mtaApi} from './mtaApi';
 
 export default (req, res) => {
   mtaApi
-    .schedule(122)
+    .stop()
     .then(function(result) {
-      res.json(result.schedule['122'].N);
+      res.json(result);
     })
     .catch(function(err) {
       console.log(err);
