@@ -12,6 +12,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "moment": "^2.24.0",
     "mta-gtfs": "^1.1.0",
     "next": "^9.1.6",
     "react": "^16.12.0",

@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import moment from 'moment';
 import Link from 'next/link';
 import Head from '../components/head';
 import Nav from '../components/nav';
@@ -21,13 +22,11 @@ const Home = () => {
       const res = await fetch('/api/testing');
       const resp = await res.json();
       setTest(resp);
-      console.log(resp);
     }
     getTest();
   }, []);
 
   const routeIds = test ? Array.from(new Set(test.map((train) => train.routeId))) : [];
-  console.log(routeIds);
 
   return (
     <div>
@@ -36,7 +35,6 @@ const Home = () => {
 
       <div className="hero">
         <p className="row date">
-          Incoming :{' '}
           {test ? (
             <React.Fragment>
               <span>
@@ -45,11 +43,14 @@ const Home = () => {
                     const routes = test.filter((route) => route.routeId === id);
                     return (
                       <>
-                        <div>{id}</div>
+                        <div>~{id}~</div>
                         <div>
-                          {routes.map((route) => (
-                            <div>{route.arrivalTime}</div>
-                          ))}
+                          {routes.map((route) => {
+                            console.log(route.arrivalTime);
+                            return (
+                              <div>{moment(route.arrivalTime * 1000).fromNow()}</div>
+                            );
+                          })}
                         </div>
                       </>
                     );
