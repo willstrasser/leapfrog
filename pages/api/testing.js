@@ -7,6 +7,7 @@ export default (req, res) => {
       res.json(result.schedule['122'].N);
     })
     .catch(function(err) {
-      console.log(err);
+      console.log('errrrrrr', err);
+      res.json('whoos', err);
     });
 };
