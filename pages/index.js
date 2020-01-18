@@ -5,28 +5,20 @@ import Head from '../components/head';
 import Nav from '../components/nav';
 
 const Home = () => {
-  const [stops, setStops] = useState(null);
-  const [test, setTest] = useState(null);
+  const [arrivals, setArrivals] = useState(null);
 
   useEffect(() => {
-    async function getStops() {
-      const res = await fetch('/api/stops');
+    async function getArrivals() {
+      const res = await fetch('/api/arrivals');
       const resp = await res.json();
-      setStops(resp);
+      setArrivals(resp);
     }
-    getStops();
+    getArrivals();
   }, []);
 
-  useEffect(() => {
-    async function getTest() {
-      const res = await fetch('/api/testing');
-      const resp = await res.json();
-      setTest(resp);
-    }
-    getTest();
-  }, []);
-
-  const routeIds = test ? Array.from(new Set(test.map((train) => train.routeId))) : [];
+  const routeIds = arrivals
+    ? Array.from(new Set(arrivals.map((train) => train.routeId)))
+    : [];
 
   return (
     <div>
@@ -35,12 +27,12 @@ const Home = () => {
 
       <div className="hero">
         <p className="row date">
-          {test ? (
+          {arrivals ? (
             <React.Fragment>
               <span>
                 {routeIds &&
                   routeIds.map((id) => {
-                    const routes = test.filter((route) => route.routeId === id);
+                    const routes = arrivals.filter((route) => route.routeId === id);
                     return (
                       <>
                         <div>~{id}~</div>

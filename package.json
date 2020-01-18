@@ -7,7 +7,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "next",
+    "dev": "next --port $PORT",
     "build": "next build",
     "start": "next start"
   },
