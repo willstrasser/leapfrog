@@ -2,15 +2,20 @@ import React, {useEffect, useState} from 'react';
 import moment from 'moment';
 import Link from 'next/link';
 import useSWR from 'swr';
-import fetch from './_libs/fetch';
+import fetch from 'isomorphic-unfetch';
 import Head from '../components/head';
 import Nav from '../components/nav';
+
+async function fetcher(...args) {
+  const res = await fetch(...args);
+  return res.json();
+}
 
 const STOP_ID = 123;
 const ARRIVALS_KEY = `/api/arrivals/${STOP_ID}`;
 
 const Home = () => {
-  const {data: arrivals, error, revalidate} = useSWR(ARRIVALS_KEY, fetch, {
+  const {data: arrivals, error, revalidate} = useSWR(ARRIVALS_KEY, fetcher, {
     refreshInterval: 30000,
   });
 
