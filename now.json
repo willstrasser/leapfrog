@@ -3,7 +3,7 @@
     "MTA_API_KEY": "@mta_api_key"
   },
   "functions": {
-    "api/arrivals.js": {
+    "api/arrivals/[stopId].js": {
       "includeFiles": "node_modules/mta-gtfs/lib/data/proto/gtfs-realtime.proto"
     }
   }
