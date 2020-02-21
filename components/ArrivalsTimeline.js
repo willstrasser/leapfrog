@@ -1,16 +1,8 @@
 import React from 'react';
 import moment from 'moment';
-import useSWR from 'swr';
 
 export const ArrivalsTimeline = (props) => {
-  const {fetcher, routesByTrack, stopId, stopLabel} = props;
-  const arrivalsUrl = `/api/arrivals/${stopId}`;
-  const {data: arrivals, error, revalidate} = useSWR(arrivalsUrl, fetcher, {
-    refreshInterval: 30000,
-  });
-
-  if (error) return <div>failed to load</div>;
-  if (!arrivals) return <div>loading...</div>;
+  const {arrivals, routesByTrack, stopLabel} = props;
 
   const routeIds = Array.from(new Set(arrivals.map((train) => train.routeId)));
   const nowMs = moment();
@@ -22,6 +14,9 @@ export const ArrivalsTimeline = (props) => {
       {Object.keys(routesByTrack).map((track) => {
         const routes = routesByTrack[track];
         const trains = arrivals.filter((arrival) => routes.includes(arrival.routeId));
+        if (!trains.length) {
+          return;
+        }
         const id = routes.join('/');
         return (
           <div
@@ -43,7 +38,7 @@ export const ArrivalsTimeline = (props) => {
                 const arrivalMs = train.arrivalTime * 1000;
                 const timeToArrivalMs = arrivalMs - nowMs;
                 const normalized = timeToArrivalMs / viewportMs;
-                const label = moment(arrivalMs).diff(nowMs, 'minutes');
+                const label = moment(moment(arrivalMs).diff(nowMs)).format('mm:ss');
                 return (
                   <div
                     key={index}

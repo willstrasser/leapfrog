@@ -3,9 +3,9 @@ import {mtaApi} from '../mtaApi';
 export default (request, response) => {
   const {stopId} = request.query;
   mtaApi
-    .schedule(stopId)
+    .schedule(stopId.split(','))
     .then(function(result) {
-      response.json(result.schedule[String(stopId)].S);
+      response.json(result);
     })
     .catch(function(err) {
       throw err;
