@@ -2,11 +2,11 @@ import React from 'react';
 import moment from 'moment';
 
 export const ArrivalsTimeline = (props) => {
-  const {arrivals, routesByTrack, stopLabel} = props;
+  const {arrivals, highlight, routesByTrack, stopLabel} = props;
 
   const routeIds = Array.from(new Set(arrivals.map((train) => train.routeId)));
   const nowMs = moment();
-  const viewportMs = moment.duration(30, 'minutes');
+  const viewportMs = moment.duration(40, 'minutes');
 
   return (
     <>
@@ -38,11 +38,12 @@ export const ArrivalsTimeline = (props) => {
                 const arrivalMs = train.arrivalTime * 1000;
                 const timeToArrivalMs = arrivalMs - nowMs;
                 const normalized = timeToArrivalMs / viewportMs;
-                const label = moment(moment(arrivalMs).diff(nowMs)).format('mm:ss');
+                const label = moment(moment(arrivalMs).diff(nowMs)).format('m:ss');
                 return (
                   <div
                     key={index}
                     style={{
+                      color: train.arrivalTime === highlight ? 'red' : 'inherit',
                       left: `${normalized * 100}vw`,
                       position: 'absolute',
                     }}
