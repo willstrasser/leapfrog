@@ -26,7 +26,10 @@ export default (request, response) => {
       const sorted = paths.sort((a, b) => {
         return a[a.length - 1] - b[b.length - 1];
       });
-      response.json({arrivals: result, paths: sorted.slice(0, 10)});
+      const sortedAgain = sorted.sort((a, b) => {
+        return a[a.length - 1] - a[0] - (b[b.length - 1] - b[0]);
+      });
+      response.json({arrivals: result, paths: sortedAgain.slice(0, 10)});
     })
     .catch(function(err) {
       throw err;
