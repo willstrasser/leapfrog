@@ -3,13 +3,14 @@ import {mtaApi} from '../mtaApi';
 export default (request, response) => {
   const {stopId} = request.query;
   const stopIds = stopId.split(',');
-  const durations = [0, 100, 10 * 60, 0];
+  const durations = [0, 80, 3 * 60, 0];
+  const contraints = [['1'], ['1', '2', '3'], ['1'], ['1']];
   mtaApi
     .schedule(stopIds)
     .then(function(result) {
       const paths = [];
       const arrOfArrivals = stopIds.map((stopId) =>
-        result.schedule[stopId].S.map((arrival) => arrival.arrivalTime)
+        result.schedule[stopId].S.map((arrival) => arrival)
       );
       function makeTransfer(path, i) {
         if (i === arrOfArrivals.length) {
@@ -17,8 +18,12 @@ export default (request, response) => {
           return;
         }
         arrOfArrivals[i].forEach((arrival) => {
-          if (!path.length || path[path.length - 1] + durations[i] < arrival) {
-            makeTransfer([...path, arrival], i + 1);
+          if (
+            !path.length ||
+            (path[path.length - 1] + durations[i] < arrival.arrivalTime &&
+              contraints[i].includes(arrival.routeId))
+          ) {
+            makeTransfer([...path, arrival.arrivalTime], i + 1);
           }
         });
       }

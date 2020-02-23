@@ -6,6 +6,7 @@ import fetch from 'isomorphic-unfetch';
 import Head from '../components/head';
 import Nav from '../components/nav';
 import {ArrivalsTimeline} from '../components/ArrivalsTimeline';
+import {useInterval} from '../_hooks/useInterval';
 
 async function fetcher(...args) {
   const res = await fetch(...args);
@@ -20,6 +21,10 @@ const STOPS = [
 ];
 
 const Home = () => {
+  let [count, setCount] = useState(0);
+  useInterval(() => {
+    setCount(count + 1);
+  }, 1000);
   const arrivalsUrl = `/api/arrivals/${STOPS.map((stop) => stop.id)}`;
   const {data, error, revalidate} = useSWR(arrivalsUrl, fetcher, {
     refreshInterval: 30000,
@@ -36,16 +41,17 @@ const Home = () => {
       <div
         style={{
           display: 'flex',
-          justifyContent: 'space-evenly',
+          flexDirection: 'column',
         }}
       >
-        {paths.map((_, index) => {
+        {paths.map((p, index) => {
           return (
             <span
               style={{color: path === index ? 'red' : 'inherit'}}
               onClick={() => setPath(index)}
             >
-              {index}{' '}
+              {moment((p[p.length - 1] - p[0]) * 1000).format('m:ss')} duration |{' '}
+              {moment(p[p.length - 1] * 1000).format('h:mm a')} arrival
             </span>
           );
         })}
