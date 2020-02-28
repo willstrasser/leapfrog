@@ -3,7 +3,7 @@ import {mtaApi} from '../mtaApi';
 export default (request, response) => {
   const {stopId} = request.query;
   const stopIds = stopId.split(',');
-  const durations = [0, 80, 7 * 60, 0];
+  const durations = [0, 80, 7.8 * 60, 0];
   const contraints = [['1'], ['1', '2', '3'], ['1'], ['1']];
   mtaApi
     .schedule(stopIds)

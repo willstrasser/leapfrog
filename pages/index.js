@@ -60,6 +60,8 @@ const Home = () => {
               .slice(0, -1)
               .map((arrival) => arrival.routeId)
               .join('→')}
+            {moment((path[2].arrivalTime - path[0].arrivalTime) * 1000) <
+              moment.duration({minutes: 14}) && '⭐️'}
           </span>
         ))}
       </div>
