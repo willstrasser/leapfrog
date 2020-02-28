@@ -50,18 +50,15 @@ const Home = () => {
             style={{color: pathIndex === index ? 'red' : 'inherit'}}
             onClick={() => setPathIndex(index)}
           >
-            {moment(
-              (path[path.length - 1].arrivalTime - path[0].arrivalTime) * 1000
-            ).format('m:ss')}{' '}
-            duration |{' '}
-            {moment(path[path.length - 1].arrivalTime * 1000).format('h:mm a')} arrival
+            {moment(path.duration * 1000).format('m:ss')} duration |{' '}
+            {moment(path.destinationTime * 1000).format('h:mm a')} arrival
             <br />
-            {path
+            {path.path
               .slice(0, -1)
               .map((arrival) => arrival.routeId)
               .join('→')}
-            {moment((path[2].arrivalTime - path[0].arrivalTime) * 1000) <
-              moment.duration({minutes: 14}) && '⭐️'}
+            {moment((path.path[2].arrivalTime - path.path[0].arrivalTime) * 1000) <
+              moment.duration({minutes: 8}) && '⭐️'}
           </span>
         ))}
       </div>
@@ -76,7 +73,7 @@ const Home = () => {
         {STOPS.map((stop, index) => (
           <ArrivalsTimeline
             arrivals={arrivals.schedule[stop.id].S}
-            highlight={paths[pathIndex][index].arrivalTime}
+            highlight={paths[pathIndex].path[index].arrivalTime}
             routesByTrack={{
               local: ['1'],
               express: ['2', '3'],
