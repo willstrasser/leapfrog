@@ -1,3 +1,5 @@
+import twilio from 'twilio';
+import moment from 'moment';
 import {mtaApi} from '../mtaApi';
 
 export default (request, response) => {
@@ -41,6 +43,20 @@ export default (request, response) => {
         .filter((path) => path.departureTime * 1000 > now)
         .sort((a, b) => a.duration - b.duration)
         .sort((a, b) => a.destinationTime - b.destinationTime);
+
+      if (request.query.sendSms) {
+        const authToken = process.env.TWILIO_ACCOUNT_AUTH;
+        const accountSid = process.env.TWILIO_ACCOUNT_SID;
+        const smsFromNumber = '2058130632';
+        const smsToNumber = '6102915090';
+        const twilioClient = twilio(accountSid, authToken);
+        twilioClient.messages.create({
+          body: `Next duration:${moment(sorted[0].duration * 1000).format('m:ss')}`,
+          from: `+1${smsFromNumber}`,
+          to: `+1${smsToNumber}`,
+        });
+      }
+
       response.json({arrivals: result, paths: sorted.slice(0, 10)});
     })
     .catch(function(err) {
